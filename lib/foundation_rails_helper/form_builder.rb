@@ -4,7 +4,9 @@ module FoundationRailsHelper
   class FormBuilder < ActionView::Helpers::FormBuilder
     include ActionView::Helpers::TagHelper
     def error_for(attribute)
-      content_tag(:small, object.errors[attribute].join(', '), :class => :error) unless object.errors[attribute].blank?
+      if object.respond_to?(:errors) && object.errors[attribute].present?
+        content_tag(:small, object.errors[attribute].join(', '), :class => :error)
+      end
     end
 
     %w(file_field email_field text_field text_area).each do |method_name|
@@ -78,7 +80,7 @@ module FoundationRailsHelper
 
   private
     def custom_label(attribute, text, options, &block)
-      has_error = !object.errors[attribute].blank?
+      has_error = object.respond_to?(:errors) && !object.errors[attribute].blank?
       text = block.call.html_safe + text if block_given?
       options ||= {}
       options[:class] ||= ""
