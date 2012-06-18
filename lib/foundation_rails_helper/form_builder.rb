@@ -78,7 +78,6 @@ module FoundationRailsHelper
       super(value, options)
     end
 
-  private
     def custom_label(attribute, text, options, &block)
       has_error = object.respond_to?(:errors) && !object.errors[attribute].blank?
       text = block.call.html_safe + text if block_given?
@@ -88,7 +87,7 @@ module FoundationRailsHelper
       label(attribute, text, options)
     end
 
-    def error_and_hint(attribute)
+    def error_and_hint(attribute, options = {})
       html = ""
       html += content_tag(:span, options[:hint], :class => :hint) if options[:hint]
       html += error_for(attribute) || ""
@@ -102,7 +101,7 @@ module FoundationRailsHelper
       options.delete(:label)
       options.delete(:label_options)
       html += yield(options)
-      html += error_and_hint(attribute)
+      html += error_and_hint(attribute, options)
     end
   end
 end
